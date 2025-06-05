@@ -366,3 +366,40 @@
     </div>
 </div>
 
+<script>
+var lang = localStorage.getItem("lang") || "en";
+
+function updateLanguageDisplay() {
+    var lang = localStorage.getItem("lang") || "en";
+    var toggleBtn = document.getElementById("languageToggle");
+    if (toggleBtn) toggleBtn.innerText = (lang === "jp") ? "EN" : "JP";
+
+    document.querySelectorAll(".dynamic-name").forEach(function(el) {
+        // Try all possible data attribute combinations
+        var en = el.getAttribute("data-en") || el.getAttribute("data-title") || el.getAttribute("data-jname") || el.innerText;
+        var jp = el.getAttribute("data-jp") || el.getAttribute("data-jname") || el.getAttribute("data-title-jp") || en;
+        // Debug output to console to verify what is happening
+        // console.log('lang:', lang, 'en:', en, 'jp:', jp, 'el:', el);
+
+        if (lang === "jp" && jp && jp.trim() !== "") {
+            el.innerText = jp;
+        } else {
+            el.innerText = en;
+        }
+    });
+    // Details page (optional)
+    document.querySelectorAll(".anime-title").forEach(function(el) {
+        var en = el.getAttribute("data-title-en");
+        var jp = el.getAttribute("data-title-jp");
+        if (en && jp) el.innerText = (lang === "jp") ? jp : en;
+    });
+}
+function toggleLanguage() {
+    lang = (lang === "en") ? "jp" : "en";
+    localStorage.setItem("lang", lang);
+    updateLanguageDisplay();
+}
+
+// Always update on load!
+document.addEventListener("DOMContentLoaded", updateLanguageDisplay);
+</script>
